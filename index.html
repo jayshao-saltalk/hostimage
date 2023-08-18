@@ -66,13 +66,30 @@
             }
         })
 
+        function callFunction() {
+            let data = {
+                    "id": "xxxexfdsaffdddddddd",
+                    "accessToken": "xxxfdsaaaaaaaaaa",
+                    "email": "jjjjjjjjjj@saltalk.com",
+                    "givenName": "JJJJ",
+                    "familyName": "SSSS",
+                    "companyId": 85548
+                }
+            window.WebViewJavascriptBridge.callHandler(
+                'ResponseOktaLogin',
+                data,
+                function(responseData) {
+                    document.getElementById("text").innerHTML = "send get responseData from java, data = " + responseData
+                }
+            );
+        }
 
     </script>
 </head>
 
 <body>
     <p>
-        <button id="btn" style="background-color: crimson;">点击</button>
+        <button id="btn" style="background-color: crimson;" onclick="">点击</button>
     <p id="text"></p>
     </p>
 </body>
