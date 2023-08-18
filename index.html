@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function setupWebViewJavascriptBridge(callback) {
+            if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
+            if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback); }
+            window.WVJBCallbacks = [callback];
+            var WVJBIframe = document.createElement('iframe');
+            WVJBIframe.style.display = 'none';
+            WVJBIframe.src = 'https://__bridge_loaded__';
+            document.documentElement.appendChild(WVJBIframe);
+            setTimeout(function () { document.documentElement.removeChild(WVJBIframe) }, 0)
+        }
+
+        function GetQueryName(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) {
+                return decodeURI(r[2]);
+            }
+            return null;
+        }
+
+        window.onload = function() {
+            let issuer = GetQueryName('issuer');
+            alert(issuer)
+        }
+
+        /*与移动端交互的所有JS方法都要放在此处注册，才能调用通过JS调用移动端或者让移动端调用这里的JS*/
+        setupWebViewJavascriptBridge(function (bridge) {
+            var uniqueId = 1
+            /* Initialize your app here */
+
+            /*我们在这注册一个js调用移动端的方法，不带参数，且不用移动端反馈结果给JS/
+            bridge.registerHandler('setDefaultValue', function () {
+                document.getElementById('text').innerText = "Default"
+            })
+            /*JS给移动端提供公开的API，在移动端可以手动调用JS的这个API。接收ObjC传过来的参数，且可以回调ObjC*/
+            bridge.registerHandler('RequestOktaLogin', function (data, responseCallback) {
+                document.getElementById('text').innerText = GetQueryName('issuer');
+                responseCallback({ 'userId': '123456', 'blog': '标哥的技术博客' })
+            })
+
+            /*JS给移动端提供公开的API，移动端通过注册，就可以在JS端调用此API时，得到回调。移动端可以在处理完成后，反馈给JS */
+
+            document.getElementById('btn').onclick = function (e) {
+                let data = {
+                    "id": "xxxexfdsaffdddddddd",
+                    "accessToken": "xxxfdsaaaaaaaaaa",
+                    "email": "jjjjjjjjjj@saltalk.com",
+                    "givenName": "JJJJ",
+                    "familyName": "SSSS",
+                    "companyId": 85548
+                }
+                document.getElementById('text').innerText = GetQueryName('issuer');
+
+                bridge.callHandler('ResponseOktaLogin', data, function (response) {
+                    alert(response)
+                    document.getElementById('text').innerText = response;
+                })
+            }
+        })
+
+
+    </script>
+</head>
+
+<body>
+    <p>
+        <button id="btn" style="background-color: crimson;">点击</button>
+    <p id="text"></p>
+    </p>
+</body>
+
+</html>
