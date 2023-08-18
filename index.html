@@ -58,7 +58,7 @@
                     "companyId": 85548
                 }
                 document.getElementById('text').innerText = GetQueryName('issuer');
-
+                console.log('--------');
                 bridge.callHandler('ResponseOktaLogin', data, function (response) {
                     alert(response)
                     document.getElementById('text').innerText = response;
