@@ -67,7 +67,8 @@
         })
 
         function callFunction() {
-            let data = {
+            setupWebViewJavascriptBridge(function (bridge) {
+                let data = {
                     "id": "xxxexfdsaffdddddddd",
                     "accessToken": "xxxfdsaaaaaaaaaa",
                     "email": "jjjjjjjjjj@saltalk.com",
@@ -75,13 +76,14 @@
                     "familyName": "SSSS",
                     "companyId": 85548
                 }
-            window.WebViewJavascriptBridge.callHandler(
-                'ResponseOktaLogin',
-                data,
-                function(responseData) {
-                    document.getElementById("text").innerHTML = "send get responseData from java, data = " + responseData
-                }
-            );
+                window.WebViewJavascriptBridge.callHandler(
+                    'ResponseOktaLogin',
+                    data,
+                    function(responseData) {
+                        document.getElementById("text").innerHTML = "send get responseData from java, data = " + responseData
+                    }
+                );
+            })
         }
 
     </script>
